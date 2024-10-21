@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game</title>
+    <link rel="stylesheet" href="styles.css"> <!-- External CSS -->
+</head>
+<body>
+    <header>
+        <h1>Simple Math Game</h1>
+        <nav>
+            <ul>
+                <li><a href="page1.html" class="link-style">Home</a></li>
+                <li><a href="page2.html" class="link-style">Charlotte's Web Summary</a></li>
+                <li><a href="page3.html" class="link-style">Contact Us</a></li>
+                <li><a href="page4.html" class="link-style">Math Game</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Let's Play!</h2>
+        <p>Answer 10 math questions and see how well you do!</p>
+        <button id="startGame" class="btn btn-primary">Start Game</button>
+        
+        <div id="questionSection" style="display: none;">
+            <p id="question"></p>
+            <input type="number" id="answerInput" class="form-control" placeholder="Your Answer">
+            <button id="submitAnswer" class="btn btn-success">Submit Answer</button>
+            <p id="result"></p>
+        </div>
+        
+        <div id="finalScore" style="display: none;">
+            <h3>Game Over!</h3>
+            <p id="correctAnswers"></p>
+            <p id="incorrectAnswers"></p>
+            <p id="percentage"></p>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <p>&copy; 2024 Hailey Savage</p>
+    </footer>
+
+    <script>
+        const startButton = document.getElementById('startGame');
+        const questionSection = document.getElementById('questionSection');
+        const questionText = document.getElementById('question');
+        const answerInput = document.getElementById('answerInput');
+        const submitButton = document.getElementById('submitAnswer');
+        const resultText = document.getElementById('result');
+        const finalScoreSection = document.getElementById('finalScore');
+        const correctAnswersText = document.getElementById('correctAnswers');
+        const incorrectAnswersText = document.getElementById('incorrectAnswers');
+        const percentageText = document.getElementById('percentage');
+
+        let currentQuestion = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        const totalQuestions = 10;
+
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const correctAnswer = num1 + num2;
+            return { num1, num2, correctAnswer };
+        }
+
+        let currentCorrectAnswer;
+
+        function startGame() {
+            currentQuestion = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            finalScoreSection.style.display = 'none';
+            questionSection.style.display = 'block';
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                const { num1, num2, correctAnswer } = generateQuestion();
+                currentCorrectAnswer = correctAnswer;
+                questionText.innerText = `Question ${currentQuestion + 1}: What is ${num1} + ${num2}?`;
+                answerInput.value = '';
+                resultText.innerText = '';
+                currentQuestion++;
+            } else {
+                endGame();
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(answerInput.value);
+            if (userAnswer === currentCorrectAnswer) {
+                correctCount++;
+                resultText.innerText = 'Correct!';
+            } else {
+                incorrectCount++;
+                resultText.innerText = `Wrong! The correct answer was ${currentCorrectAnswer}.`;
+            }
+            setTimeout(nextQuestion, 1000); // Move to the next question after 1 second
+        }
+
+        function endGame() {
+            questionSection.style.display = 'none';
+            finalScoreSection.style.display = 'block';
+            correctAnswersText.innerText = `Correct Answers: ${correctCount}`;
+            incorrectAnswersText.innerText = `Incorrect Answers: ${incorrectCount}`;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            percentageText.innerText = `You got ${percentage}% of the questions right.`;
+        }
+
+        startButton.addEventListener('click', startGame);
+        submitButton.addEventListener('click', checkAnswer);
+    </script>
+</body>
+</html>
